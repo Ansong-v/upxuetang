@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.up.mapping.DirectionMapper">
+  <resultMap id="BaseResultMap" type="com.up.entity.Direction">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="directionName" jdbcType="VARCHAR" property="directionname" />
+    <result column="directionIcon" jdbcType="VARCHAR" property="directionicon" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, directionName, directionIcon
+  </sql>
+  <select id="selectByExample" parameterType="com.up.entity.DirectionExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from direction
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+
+  <resultMap id="allClassify" type="com.up.entity.Direction" extends="BaseResultMap">
+    <collection property="classify" ofType="com.up.entity.Classify" select="selectClassify"
+                column="{directionId=id}">
+    </collection>
+  </resultMap>
+<!--  自定义查询-->
+  <select id="allClassify" resultMap="allClassify">
+    select  * from  direction
+  </select>
+  <select id="selectClassify" resultMap="com.up.mapping.ClassifyMapper.BaseResultMap">
+    select * from classify where directionId=#{directionId};
+  </select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from direction
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from direction
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.up.entity.DirectionExample">
+    delete from direction
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.up.entity.Direction">
+    insert into direction (id, directionName, directionIcon
+      )
+    values (#{id,jdbcType=INTEGER}, #{directionname,jdbcType=VARCHAR}, #{directionicon,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.up.entity.Direction">
+    insert into direction
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="directionname != null">
+        directionName,
+      </if>
+      <if test="directionicon != null">
+        directionIcon,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="directionname != null">
+        #{directionname,jdbcType=VARCHAR},
+      </if>
+      <if test="directionicon != null">
+        #{directionicon,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.up.entity.DirectionExample" resultType="java.lang.Long">
+    select count(*) from direction
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update direction
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.directionname != null">
+        directionName = #{record.directionname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.directionicon != null">
+        directionIcon = #{record.directionicon,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update direction
+    set id = #{record.id,jdbcType=INTEGER},
+      directionName = #{record.directionname,jdbcType=VARCHAR},
+      directionIcon = #{record.directionicon,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.up.entity.Direction">
+    update direction
+    <set>
+      <if test="directionname != null">
+        directionName = #{directionname,jdbcType=VARCHAR},
+      </if>
+      <if test="directionicon != null">
+        directionIcon = #{directionicon,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.up.entity.Direction">
+    update direction
+    set directionName = #{directionname,jdbcType=VARCHAR},
+      directionIcon = #{directionicon,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

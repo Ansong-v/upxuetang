@@ -42,7 +42,8 @@
 
 
 		<!-- table指定每个表的生成策略 -->
-		<table tableName="users" domainObjectName="Users"></table>
-
+<!--		<table tableName="users" domainObjectName="Users"></table>-->
+<!--		<table tableName="direction" domainObjectName="Direction"></table>-->
+		<table tableName="classify" domainObjectName="Classify"></table>
 	</context>
 </generatorConfiguration>
